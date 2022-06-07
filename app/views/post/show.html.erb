@@ -1,0 +1,49 @@
+<div class="container">
+    <div class="row">
+        <div class="jumbotron">
+            <h1>Blogs</h1>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>Title</td>
+                    <td>Body</td>
+                    <td>User Type</td>
+                    <td>Action</td>
+                    <td>Edit</td>
+                </tr>
+            </thead>
+            <tbody>
+                <%@posts.each do |post|%>
+                    <tr>
+                        <td><%=post.title%></td>
+                        <td><%=post.body%></td>
+                        <td><%=post.user.user_type.capitalize%></td>
+                        <%if @allowed_to_delete%>
+                            <td><button type="button" class="btn btn-danger" onclick="deletePost(<%=post.id%>)">Delete</button></td>
+                        <%end%>
+                        <%if @allowed_to_delete%>
+                            <td><%=link_to "Edit", post_edit_path(id: post.id), class:"btn btn-warning"%></td>
+                        <%end%>
+                    </tr>
+                <%end%>
+            </tbody>
+        </table>
+        <div class="container">
+            <%= will_paginate @posts %>
+        </div>
+    </div>
+    <div class="container">
+        <%=link_to "Create Post", post_new_path, class:"btn btn-primary"%>
+    </div>
+</div>
+
+<script>
+function deletePost(id) {
+    $.ajax({
+        url: '/delete_post',
+        method: "post",
+        data: {id: id},
+    })
+}
+</script>
